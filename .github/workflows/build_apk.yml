@@ -37,7 +37,7 @@ jobs:
 
       - name: Generate Custom Release Keystore (Google Play Protect Compliant)
         run: |
-          # ساخت گواهی معتبر ۲ سال اختصاصی برای عبور از سد بلاکینگ سپر امنیتی گوگل
+          # Create a secure digital signing key to bypass Google Play Protect alerts
           keytool -genkeypair -v \
             -keystore my-release-key.jks \
             -alias my-key-alias \
@@ -48,14 +48,15 @@ jobs:
             -keypass "my_strong_keystore_password" \
             -dname "CN=MohammadSadegh, OU=ObsidianAPK, O=Dev, L=Tehran, S=Tehran, C=IR"
 
-      - name: Build Android APK (Signed)
+      - name: Build Android APK (Signed & Auto-Approve)
         run: |
-          # تایيد گواهی‌های پروانه توسعه اندروید پیش از کامپایل
+          # Accept official Android SDK Licenses beforehand
           yes | sdkmanager --licenses || true
           
-          # کامپایل فوق‌العاده پایدار به همراه امضا جهت رسمیت برنامه در گوشی کاربر
+          # Stable, signed build with `--yes` added to skip interactive questions
           flet build apk \
             --verbose \
+            --yes \
             --android-signing-key-store my-release-key.jks \
             --android-signing-key-store-password "my_strong_keystore_password" \
             --android-signing-key-alias my-key-alias \
