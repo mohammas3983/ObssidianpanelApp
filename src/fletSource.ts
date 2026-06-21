@@ -1,42 +1,20 @@
 export const fletPythonCode = `import sys
 import os
+import traceback
 
-# Determine if running on mobile device (Android/iOS)
-is_mobile = (
-    sys.platform == "android" or
-    hasattr(sys, "getandroidapilevel") or
-    "ANDROID_ENTRYPOINT" in os.environ or
-    "ANDROID_ARGUMENT" in os.environ or
-    os.environ.get("SEARCH_ENGINE") == "serious_python"
-)
+global_error = None
 
-# Only verify and run pip if we are not on mobile (avoids importing subprocess/pip on mobile)
-if not is_mobile:
-    import subprocess
-    import importlib.util
-    REQUIRED_PACKAGES = ["flet", "requests"]
-    for package in REQUIRED_PACKAGES:
-        try:
-            if package == "flet":
-                import flet
-            elif package == "requests":
-                import requests
-        except ImportError:
-            print(f"Required package '{package}' is missing. Readying self-installation...")
-            try:
-                subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-                print(f"Successfully installed missing package '{package}'!")
-            except Exception as e:
-                print(f"Error during automated installation of '{package}': {e}")
-                print("Please ensure your Python dynamic pip path has internet access.")
+try:
+    import asyncio
+    import requests
+    import json
+    import random
+    import string
+    import urllib.parse
+    from datetime import datetime
+except Exception as e:
+    global_error = traceback.format_exc()
 
-import asyncio
-import requests
-import json
-import random
-import string
-import urllib.parse
-from datetime import datetime
 import flet as ft
 
 # =====================================================================
@@ -236,7 +214,7 @@ class ObsidianDeployerApp:
             color = ft.colors.GREEN_400 if self.page.theme_mode == ft.ThemeMode.DARK else ft.colors.GREEN_700
             prefix = "✔ "
         elif status == "error":
-            color = ft.colors.RED_400 if self.page.theme_mode == ft.ThemeMode.DARK else ft.colors.RED_750
+            color = ft.colors.RED_400 if self.page.theme_mode == ft.ThemeMode.DARK else ft.colors.RED_700
             prefix = "✘ "
         elif status == "warn":
             color = ft.colors.AMBER_500
@@ -701,6 +679,11 @@ class ObsidianDeployerApp:
         self.page.update()
 
 def main(page: ft.Page):
+    if global_error:
+        page.add(ft.Text("FATAL IMPORT ERROR:", color=ft.colors.RED, weight=ft.FontWeight.BOLD))
+        page.add(ft.Text(global_error, color=ft.colors.RED_300, size=10, selectable=True))
+        page.update()
+        return
     ObsidianDeployerApp(page)
 
 if __name__ == "__main__":
