@@ -22,9 +22,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      # تغییرات کلیدی در این بخش اعمال شده است
       - name: Setup Flutter Toolchain
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.41.7' # تنظیم دقیق نسخه برای جلوگیری از درخواست دانلود توسط Flet
           channel: 'stable'
 
       - name: Install Android SDK
@@ -49,6 +51,9 @@ jobs:
             -dname "CN=MohammadSadegh, OU=ObsidianAPK, O=Dev, L=Tehran, S=Tehran, C=IR"
 
       - name: Build Android APK (Signed)
+        # اضافه کردن متغیر CI=true برای اطمینان مضاعف در عدم تعامل‌پذیری ترمینال
+        env:
+          CI: true
         run: |
           # تایيد گواهی‌های پروانه توسعه اندروید پیش از کامپایل
           yes | sdkmanager --licenses || true
