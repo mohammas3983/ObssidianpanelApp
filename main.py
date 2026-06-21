@@ -551,7 +551,7 @@ class ObsidianDeployerApp:
                                 ft.Text(ast.get("date", "-"), size=9, color=ft.colors.GREY_500),
                                 ft.Row([
                                     ft.IconButton(
-                                        icon=ft.icons.REPORT_GMAILERRORRED_ROUNDED,
+                                        icon=ft.icons.ERROR_ROUNDED,
                                         icon_size=16,
                                         tooltip="Show full Report Details",
                                         icon_color=ft.colors.INDIGO_300,
@@ -662,7 +662,7 @@ class ObsidianDeployerApp:
         # Page Main Setup Layout
         self.main_column = ft.Column([
             ft.Row([
-                ft.Icon(ft.icons.CLOUDFLARE, color=ft.colors.ORANGE_500, size=24),
+                ft.Icon(ft.icons.CLOUD_ROUNDED, color=ft.colors.ORANGE_500, size=24),
                 ft.Text(t["title"], size=18, weight=ft.FontWeight.BOLD),
                 ft.Row([self.lang_btn, self.theme_btn], spacing=2)
             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
